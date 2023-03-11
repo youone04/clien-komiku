@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { ScrollView, StyleSheet, Text, View,Image } from "react-native";
-import { Card } from "react-native-elements";
+import { ScrollView, StyleSheet, Text, View,Image, TouchableOpacity } from "react-native";
+import { Button, Card } from "react-native-elements";
 
-function Home() {
+function Home({ navigation }) {
   const [dataHome, setDataHome] = useState({
     loading: true,
     data: [],
@@ -12,9 +12,17 @@ function Home() {
     getKomikHome();
   }, []);
 
+const toListChapter = (link) => {
+  navigation.navigate('List-Chapter', {
+    link: link,
+    // otherParam: { link, tujuan, tgl },
+})
+
+}
+
   const getKomikHome = async () => {
     try {
-      const data = await fetch("http://192.168.253.39:8800/api/terbaru", {
+      const data = await fetch("http://192.168.246.39:8800/api/terbaru", {
         method: "GET",
         headers: {
           Accept: "application/json",
@@ -40,9 +48,9 @@ function Home() {
       ) : (
         <ScrollView>
           {dataHome.data.data.map((i, d) => {
-            console.log(i.img)
             return (
-              <View style={styles.container}>
+              <TouchableOpacity key={d} onPress={() => toListChapter(i.link)}>
+                <View style={styles.container}>
                 <Card title="Local Modules" elevation={7}>
                     {/*react-native-elements Card*/}
                 <Image
@@ -55,6 +63,7 @@ function Home() {
                   </Text>
                 </Card>
               </View>
+              </TouchableOpacity>
             );
           })}
         </ScrollView>
